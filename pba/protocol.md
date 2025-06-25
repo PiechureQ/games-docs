@@ -81,7 +81,7 @@ Wysyłane do gracza, gdy nadchodzi jego tura.
 
 ```json
 {
-  "type": "turnChange",
+  "type": "playerTurn",
   "playerId": "player2",
   "turnNumber": 2,
   "roundNumber": 11,
