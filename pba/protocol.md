@@ -6,6 +6,13 @@
 
 **Pixel Bot Arena** to gra oparta na pikselowej mapie, w której autonomiczne boty-gracze rywalizują, malując pola swoimi kolorami. Gra działa w nieskończonych kolejkach i turach, a stan mapy aktualizowany jest na bieżąco. Dodatkowo wspierani są obserwatorzy, którzy mogą śledzić rozgrywkę w czasie rzeczywistym.
 
+Gracz dołącza do lobby i może w każdej chwili opuścić grę. Gdy gracz jest w lobby i gra się rozpocznie będzie od
+dostawał informacje o możliwym ruchu, stanie mapy i informacji o graczach. Gdy gracz opuszcza lobby znika z mapy i w
+miejsce jego kolory zostaje zastąpione białym.
+
+Do gracza należy zaimplementowanie komunikacji z grą w sposób opisany poniżej. Gra przed dołączeniem gracza będzie
+sprawdzać poprawność komunikacji. 
+
 ---
 
 ## 🧠 Definicje
@@ -24,24 +31,14 @@
 
 ## 📡 API – REST
 
-### `POST /join`
-Dołącza gracza do gry.
-
-**Odpowiedź:**
-```json
-{
-  "playerId": "abc123",
-  "color": "red"
-}
-````
-
 ---
+### `GET /start`
 
-### `POST /leave`
+Rozpoczyna gre.
 
-Usuwa gracza z gry. Wszystkie jego piksele stają się białe.
+### `GET /stop`
 
----
+Kończy gre.
 
 ### `GET /game-state`
 
@@ -51,16 +48,17 @@ Zwraca aktualny stan gry (dla obserwatorów lub UI).
 
 ```json
 {
-  "turnNumber": 42,
-  "currentPlayerId": "player2",
-  "map": [
-    ["white", "blue", "blue"],
-    ["red", "red", "blue"]
-  ],
+  "state": "waiting",
+  "activePlayer": "123",
+  "turnNumber": 0,
+  "roundNumber": 42,
   "players": [
     { "id": "player1", "color": "red" },
     { "id": "player2", "color": "blue" }
-  ]
+  ],
+  "map": [
+    { "x": 12, "y": 5, "color": "red" },
+  ],
 }
 ```
 
@@ -83,12 +81,12 @@ Wysyłane do gracza, gdy nadchodzi jego tura.
 
 ```json
 {
-  "type": "playerTurn",
-  "yourId": "player2",
-  "turnNumber": 42,
+  "type": "turnChange",
+  "playerId": "player2",
+  "turnNumber": 2,
+  "roundNumber": 11,
   "map": [
-    ["white", "blue", "blue"],
-    ["red", "white", "white"]
+    { "x": 12, "y": 5, "color": "red" },
   ],
   "players": [
     { "id": "player1", "color": "red" },
@@ -118,10 +116,23 @@ Wysyłane przez gracza w jego turze.
 {
   "type": "playerMove",
   "command": "paint",
-  "target": { "x": 12, "y": 5 }
+  "targets": [{ "x": 12, "y": 5 }]
 }
 ```
 
+---
+
+### 📥 Gracz: `join`
+
+Dołącza gracza do gry. Zwraca identyfikator gracza jeśli udało się dołączyć.
+
+**Odpowiedź:**
+```json
+{
+  "playerId": "abc123",
+  "color": "red"
+}
+````
 ---
 
 ### 📤 Obserwator: `gameUpdate`
@@ -133,16 +144,17 @@ Wysyłane do obserwatorów po każdej turze.
 ```json
 {
   "type": "gameUpdate",
-  "turnNumber": 42,
-  "currentPlayerId": "player2",
-  "map": [
-    ["white", "blue", "blue"],
-    ["red", "red", "blue"]
-  ],
+  "state": "playing",
+  "activePlayer": "",
+  "turnNumber": 0,
+  "roundNumber": 42,
   "players": [
     { "id": "player1", "color": "red" },
     { "id": "player2", "color": "blue" }
-  ]
+  ],
+  "map": [
+    { "x": 12, "y": 5, "color": "red" },
+  ],
 }
 ```
 
