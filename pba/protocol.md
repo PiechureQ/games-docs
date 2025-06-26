@@ -85,8 +85,10 @@ Wysyłane do gracza, gdy nadchodzi jego tura.
   "playerId": "player2",
   "turnNumber": 2,
   "roundNumber": 11,
-  "map": [
-    { "x": 12, "y": 5, "color": "red" },
+  "map": {
+    "pixels": ['red', 'black'],
+    "height": 20,
+    "width": 20
   ],
   "players": [
     { "id": "player1", "color": "red" },
@@ -152,8 +154,10 @@ Wysyłane do obserwatorów po każdej turze.
     { "id": "player1", "color": "red" },
     { "id": "player2", "color": "blue" }
   ],
-  "map": [
-    { "x": 12, "y": 5, "color": "red" },
+  "map": {
+    "pixels": ['red', 'black'],
+    "height": 20,
+    "width": 20
   ],
 }
 ```
