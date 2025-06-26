@@ -56,8 +56,10 @@ Zwraca aktualny stan gry (dla obserwatorów lub UI).
     { "id": "player1", "color": "red" },
     { "id": "player2", "color": "blue" }
   ],
-  "map": [
-    { "x": 12, "y": 5, "color": "red" },
+  "map": {
+    "pixels": ['red', 'black'],
+    "height": 20,
+    "width": 20
   ],
 }
 ```
